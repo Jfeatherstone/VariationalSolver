@@ -63,20 +63,22 @@ def parameterizeHamiltonian(hamiltonian, form, var, bounds, volumeElement):
 def minimizeHamiltonian(parameterizedHamiltonian, params, plot=False, initialGuess=None):
     if isinstance(params, list):
         # Define a function that we can evaluate to minimize
-        def eval_H(x):
-            subForm = dict(zip(params, x))
-            return parameterizedHamiltonian.evalf(subs=subForm)
+        #def eval_H(x):
+        #    subForm = dict(zip(params, x))
+        #    return parameterizedHamiltonian.evalf(subs=subForm)
 
         # If we aren't provided a list of guess, just take 1
         if initialGuess == None:
             initialGuess = np.ones(len(params))
 
         # Now optimize numerically with scipy
-        res = minimize(eval_H, initialGuess)
+        #res = minimize(eval_H, initialGuess)
 
-        finalSol = res.x
+        #finalSol = res.x
 
-        return finalSol, eval_H(finalSol)
+        finalSol = multivariableMinimization(parameterizedHamiltonian, params, initialGuess)
+
+        return finalSol, parameterizedHamiltonian.evalf(subs=dict(zip(params, finalSol)))
     else:
         # If it's just a single variable, we should be able to solve
         deriv = sp.diff(parameterizedHamiltonian, params)
@@ -108,3 +110,33 @@ def minimizeHamiltonian(parameterizedHamiltonian, params, plot=False, initialGue
 
         return finalSol, parameterizedHamiltonian.evalf(subs={params:finalSol})
 
+def multivariableMinimization(expr, params, initialGuess, systemPasses=5, beginTolerance=3):
+    """
+    Essentially we just optimize each paramter while holding the others fixed,
+    and then make multiple passes through the set of variables to try and settle
+    in a minima
+    """
+    tolerances = 10**np.linspace(beginTolerance, beginTolerance+systemPasses, systemPasses)
+    optimalParams = initialGuess
+    for i in range(systemPasses):
+        print(optimalParams)
+        for j in range(len(params)):
+            # Turn the expression into a one variable function
+            # by holding all parameters except one constant
+            def evalFunc(x):
+                # Create a dict of substitutions, and change the current variable
+                subForm = dict(zip(params, optimalParams))
+                subForm[params[j]] = x[0]
+                #print(subForm)
+                return float(expr.evalf(subs=subForm))
+            
+            # Minimize
+            res = minimize(evalFunc, optimalParams[j], tol=tolerances[i])
+            #print(res)  
+            # Assuming we get a solution, assign that as our new optimal parameter
+            # If we don't get a solution, that's okay, we can just move on to the next
+            # parameter and hope the next pass can optimize it
+            if len(res.x) > 0:
+                optimalParams[j] = res.x[0]
+
+    return optimalParams
