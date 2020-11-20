@@ -76,3 +76,15 @@ def CartesianGaussian():
     params = b
     form = sp.exp(-b * (x**2 + y**2 + z**2))
     return form, var, bounds, volumeElement, params
+
+
+def CartesianLorentzian():
+    x, y, z = sp.symbols('x y z', real=True)
+    b = sp.symbols('b', real=True, positive=True)
+
+    var = [x, y, z]
+    bounds = [[-sp.oo, sp.oo], [-sp.oo, sp.oo], [-sp.oo, sp.oo]]
+    volumeElement = 1
+    params = b
+    form = b**2/(x**2 + .25*b**2) * b**2/(y**2 + .25*b**2) * b**2/(z**2 + .25*b**2)
+    return form, var, bounds, volumeElement, params

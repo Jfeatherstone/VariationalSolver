@@ -108,6 +108,7 @@ def minimizeHamiltonian(parameterizedHamiltonian, params, plot=False, initialGue
             plt.legend()
             plt.ylabel(r'$\langle \hat H \rangle$')
 
+
         return finalSol, parameterizedHamiltonian.evalf(subs={params:finalSol})
 
 def multivariableMinimization(expr, params, initialGuess, systemPasses=5, beginTolerance=3):
