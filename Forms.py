@@ -45,6 +45,50 @@ def SphericalGaussian():
     return form, var, bounds, volumeElement, params
 
 # Spherical Exponential (radial but normalized over theta and phi)
+def SphericalGaussianProduct():
+    r, b, theta, phi = sp.symbols(r'r b \theta \phi', real=True, positive=True)
+
+    var = [r, theta, phi]
+    bounds = [[0, sp.oo], [0, sp.pi], [0, 2*sp.pi]]
+    volumeElement = r**2 * sp.sin(theta)
+    params = b
+    form = sp.exp(-b * r**2) * r
+    return form, var, bounds, volumeElement, params
+
+# Spherical Exponential (radial but normalized over theta and phi)
+def SphericalExponentialTrigTheta():
+    r, b, theta, phi = sp.symbols(r'r b \theta \phi', real=True, positive=True)
+
+    var = [r, theta, phi]
+    bounds = [[0, sp.oo], [0, sp.pi], [0, 2*sp.pi]]
+    volumeElement = r**2 * sp.sin(theta)
+    params = b
+    form = sp.exp(-b * r) * sp.sin(theta)
+    return form, var, bounds, volumeElement, params
+
+# Spherical Exponential (radial but normalized over theta and phi)
+def SphericalExponentialTrigPhi():
+    r, b, theta, phi = sp.symbols(r'r b \theta \phi', real=True, positive=True)
+
+    var = [r, theta, phi]
+    bounds = [[0, sp.oo], [0, sp.pi], [0, 2*sp.pi]]
+    volumeElement = r**2 * sp.sin(theta)
+    params = b
+    form = sp.exp(-b * r) * sp.exp(-sp.I * phi)
+    return form, var, bounds, volumeElement, params
+
+# Spherical Exponential (radial but normalized over theta and phi)
+def SphericalLorentzian():
+    r, b, theta, phi = sp.symbols(r'r b \theta \phi', real=True, positive=True)
+
+    var = [r, theta, phi]
+    bounds = [[0, sp.oo], [0, sp.pi], [0, 2*sp.pi]]
+    volumeElement = r**2 * sp.sin(theta)
+    params = b
+    form = b**2 / (r**2 + 1/4 * b**2)
+    return form, var, bounds, volumeElement, params
+
+# Spherical Exponential (radial but normalized over theta and phi)
 def CubedExponential():
     r, b, theta, phi = sp.symbols(r'r b \theta \phi', real=True, positive=True)
 
