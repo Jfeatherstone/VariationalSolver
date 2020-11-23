@@ -56,7 +56,7 @@ def SphericalGaussianProduct():
     return form, var, bounds, volumeElement, params
 
 # Spherical Exponential (radial but normalized over theta and phi)
-def SphericalExponentialTrigTheta():
+def SphericalExponentialTrigThetaSin():
     r, b, theta, phi = sp.symbols(r'r b \theta \phi', real=True, positive=True)
 
     var = [r, theta, phi]
@@ -64,6 +64,17 @@ def SphericalExponentialTrigTheta():
     volumeElement = r**2 * sp.sin(theta)
     params = b
     form = sp.exp(-b * r) * sp.sin(theta)
+    return form, var, bounds, volumeElement, params
+
+# Spherical Exponential (radial but normalized over theta and phi)
+def SphericalExponentialTrigThetaCos():
+    r, b, theta, phi = sp.symbols(r'r b \theta \phi', real=True, positive=True)
+
+    var = [r, theta, phi]
+    bounds = [[0, sp.oo], [0, sp.pi], [0, 2*sp.pi]]
+    volumeElement = r**2 * sp.sin(theta)
+    params = b
+    form = sp.exp(-b * r) * sp.cos(theta)
     return form, var, bounds, volumeElement, params
 
 # Spherical Exponential (radial but normalized over theta and phi)
